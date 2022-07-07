@@ -4,8 +4,12 @@ A model to optimize the dispatch and sizing of Carnot Battery in the European el
 
 Dependencies 
 Solver:
-  CBC (recommended see https://github.com/coin-or/Cbc)
-  GLPK
-Carbon Data (optional):
-  Electricity Map
 
+CBC (recommended see https://github.com/coin-or/Cbc)
+
+GLPK
+
+Carbon Data (optional):
+
+
+Electricity Map
