@@ -29,7 +29,7 @@ class CoalPowerPlant:
         self.startDateTimestr = f'{self.year}-01-01T00'
         self.startDateTime = pd.Timestamp(f'{self.startDateTimestr}', tz=f'{self.timezone}')
         self.biddingCode = 'RO'
-        self.nameCode = {'CzechRepublic': 'CZ', 'Germany': 'DE', 'Denmark': 'DK', 'Greece': 'GR', 'Spain': 'ES',
+        self.nameCode = {'CzechRepublic': 'CZ', 'Germany': 'DE_LU', 'Denmark': 'DK', 'Greece': 'GR', 'Spain': 'ES',
                          'Finland': 'FI', 'France': 'FR', 'Hungary': 'HU', 'Italy': 'IT', 'Netherlands': 'NL',
                          'Poland': 'PL',
                          'Slovenia': 'SI', 'Slovakia': 'SK', 'UnitedKingdom': 'UK', 'Bulgaria': 'BG', 'Croatia': 'HR',
@@ -175,10 +175,23 @@ class CoalPowerPlant:
 
     def getOneCountryList(self, countrytarget='Poland'):
 
+        if not countrytarget in self.nameCode.keys() or self.nameCode.values(): #todo: logic gate is incorrect
+            print('Please check the spelling. The country is not in the list of countries or country codes.')
+
         onlyTarget = self.closingCoal.drop(self.closingCoal.loc[self.closingCoal['Country'] != countrytarget].index)
         onlyTarget.reset_index(inplace=True)
 
         oneCountry = onlyTarget.Capacity.unique().tolist()
+
+        if not oneCountry:
+            newtarget= list(self.nameCode.keys())[list(self.nameCode.values()).index(f'{countrytarget}')]
+            onlyTarget = self.closingCoal.drop(self.closingCoal.loc[self.closingCoal['Country'] != newtarget].index)
+            onlyTarget.reset_index(inplace=True)
+            oneCountry = onlyTarget.Capacity.unique().tolist()
+
+        if not oneCountry:
+            print('No Power Plants found, but it could be a spelling error.')
+
         return oneCountry
 
     def ageAtRetirement(self):
@@ -242,4 +255,4 @@ class CoalPowerPlant:
 
 if __name__ == '__main__':
     x = CoalPowerPlant()
-    x.ageAtRetirement()
+    print(x.getOneCountryList('Poland'))
